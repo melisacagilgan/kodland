@@ -1,0 +1,54 @@
+{% extends "base.html" %} {% block content %}
+<h1>Quiz</h1>
+<div class="score">Best Score: {{best_score}}%</div>
+<div class="score">Score: {{score}}%</div>
+<form method="POST">
+  <div>
+    <label for="{{ form.q1.id }}">{{ form.q1.label.text }}</label>
+    <div>
+      {% for subfield in form.q1 %} {{ subfield() }} {{ subfield.label.text
+      }}<br />
+      {% endfor %}
+    </div>
+  </div>
+  <br />
+  <div>
+    <label for="{{ form.q2.id }}">{{ form.q2.label.text }}</label>
+    <div>
+      {% for subfield in form.q2 %} {{ subfield() }} {{ subfield.label.text
+      }}<br />
+      {% endfor %}
+    </div>
+  </div>
+  <br />
+  <div>
+    <label for="{{ form.q3.id }}">{{ form.q3.label.text }}</label>
+    <div>
+      {% for subfield in form.q3 %} {{ subfield() }} {{ subfield.label.text
+      }}<br />
+      {% endfor %}
+    </div>
+  </div>
+  <br />
+  <div>
+    <label for="{{ form.q4.id }}">{{ form.q4.label.text }}</label>
+    <div>
+      {% for subfield in form.q4 %} {{ subfield() }} {{ subfield.label.text
+      }}<br />
+      {% endfor %}
+    </div>
+  </div>
+  <br />
+  <div>
+    <label for="{{ form.q5.id }}">{{ form.q5.label.text }}</label>
+    <div>
+      {% for subfield in form.q5 %} {{ subfield() }} {{ subfield.label.text
+      }}<br />
+      {% endfor %}
+    </div>
+  </div>
+  </p>
+  <button type="submit">Submit Answers</button>
+  <footer>Melisa Çağılgan</footer>
+</form>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %} {% block content %}
+
+<form action="" method="post">
+  <h2>
+    Question 1: What is your name? <br />
+    {{ form.fullname(size=20) }}
+  </h2>
+  <h2>Question 2: What is your favorite color?</h2>
+  <p>
+    {% for subfield in form.color %} {{ subfield() }} {{ subfield.label.text
+    }}<br />
+    {% endfor %}
+  </p>
+  <h2>Question 3: What is your favorite animal?</h2>
+  <p>
+    {% for subfield in form.animal %} {{ subfield() }} {{ subfield.label.text
+    }}<br />
+    {% endfor %}
+  </p>
+  <h2>
+    Question 4: Describe your hobbies or interests:<br />
+    {{ form.hobbies() }}
+  </h2>
+
+  <button type="submit" class="btn btn-primary">Create User</button>
+  <footer>Melisa Çağılgan</footer>
+</form>
+
+{% endblock %}
