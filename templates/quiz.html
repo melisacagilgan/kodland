@@ -2,7 +2,7 @@
 <h1>Quiz</h1>
 <div class="score">Best Score: {{best_score}}%</div>
 <div class="score">Score: {{score}}%</div>
-<form method="POST">
+<form method="POST" action="{{ url_for('quiz') }}">
   <div>
     <label for="{{ form.q1.id }}">{{ form.q1.label.text }}</label>
     <div>

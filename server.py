@@ -1,12 +1,13 @@
-from flask import Flask, render_template, request, redirect, session, flash
+from flask import Flask, render_template, request, redirect, session, flash, url_for
 from entries import InfoForm, QuizForm
-from database import insert_records, get_record_by_fullname, update_score
+from database import get_best_score, insert_records, get_record_by_fullname, update_score
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'kodlandprojectkey'
 
 
-@app.route('/info', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def info():
     info_form = InfoForm()
 
@@ -25,7 +26,7 @@ def info():
             if get_record_by_fullname(fullname) is not None:
                 session['fullname'] = fullname
                 flash("User information saved successfully!", "success")
-                return redirect('/quiz')
+                return redirect(url_for("quiz"))
             else:
                 flash("Failed to save user information.", "error")
         except Exception as e:
@@ -38,30 +39,40 @@ def info():
 @app.route('/quiz', methods=['GET', 'POST'])
 def quiz():
     quiz_form = QuizForm()
-    score = session.get('score', 0)
-    best_score = session.get('best_score', 0)
-
-    # Retrieve fullname from session
-    fullname = session.get('fullname')
 
     if request.method == 'POST':
+        # Retrieve fullname from session
+        fullname = session.get('fullname')
+        best_score = get_best_score(fullname)
+
+        if not fullname:
+            flash("Fullname not found in session. Please provide it in the URL.", "error")
+            # Redirect to a page where fullname can be set
+            return redirect('/info')
+
         # Retrieve the best score from the session or database
         current_record = get_record_by_fullname(fullname)
-        if current_record:
-            best_score = current_record[4]
 
+        # Calculate the score
         score = calculate_score(quiz_form)
         session['score'] = score
 
-        # Retrieve the current score for the user
-        current_record = get_record_by_fullname(fullname)
+        # Update the best score if necessary
         if current_record:
-            if score > current_record[4]:
+            if score >= current_record[4]:
                 update_score(fullname, score)
                 best_score = score
                 session['best_score'] = best_score
 
-        return redirect('/quiz')
+    else:  # GET request
+        score = 0
+        best_score = 0
+
+        # Retrieve fullname from query parameters
+        fullname = request.args.get('fullname')
+        if fullname:
+            # Set the fullname in session if it's provided in the query parameters
+            session['fullname'] = fullname
 
     return render_template('quiz.html', form=quiz_form, score=score, best_score=best_score)
 
